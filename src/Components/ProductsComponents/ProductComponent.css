@@ -1,0 +1,12 @@
+#root > div > div > div > div.col-md-3 > div > ul > li > span:hover{
+    color:skyblue;
+    cursor: pointer;
+}
+.input{
+    height: 30px;
+    width: 110px;
+    text-align: left;
+}
+.thumbHover:hover{
+    border:1px solid blueviolet;
+}

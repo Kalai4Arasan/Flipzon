@@ -1,0 +1,434 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.13
+-- Dumped by pg_dump version 10.13
+
+-- Started on 2020-08-19 15:31:40
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 12924)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2861 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- TOC entry 202 (class 1259 OID 16467)
+-- Name: brand; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.brand
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.brand OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 201 (class 1259 OID 16462)
+-- Name: Brands; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Brands" (
+    brand character varying(100) NOT NULL,
+    bid bigint DEFAULT nextval('public.brand'::regclass) NOT NULL,
+    categories bigint[]
+);
+
+
+ALTER TABLE public."Brands" OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 16485)
+-- Name: buy; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.buy
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.buy OWNER TO postgres;
+
+--
+-- TOC entry 205 (class 1259 OID 16487)
+-- Name: Buy; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Buy" (
+    buyid bigint DEFAULT nextval('public.buy'::regclass) NOT NULL,
+    uid bigint NOT NULL,
+    pid bigint NOT NULL,
+    buying_date date NOT NULL,
+    shiping_date date,
+    deleivery_date date,
+    total_amount numeric(10,3) NOT NULL,
+    quantity bigint NOT NULL
+);
+
+
+ALTER TABLE public."Buy" OWNER TO postgres;
+
+--
+-- TOC entry 207 (class 1259 OID 16516)
+-- Name: cart; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.cart
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cart OWNER TO postgres;
+
+--
+-- TOC entry 206 (class 1259 OID 16511)
+-- Name: Cart; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Cart" (
+    cart_id bigint DEFAULT nextval('public.cart'::regclass) NOT NULL,
+    uid bigint NOT NULL,
+    pid bigint NOT NULL
+);
+
+
+ALTER TABLE public."Cart" OWNER TO postgres;
+
+--
+-- TOC entry 203 (class 1259 OID 16475)
+-- Name: category; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.category
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.category OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16455)
+-- Name: Category; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Category" (
+    category character varying(100) NOT NULL,
+    cid bigint DEFAULT nextval('public.category'::regclass) NOT NULL
+);
+
+
+ALTER TABLE public."Category" OWNER TO postgres;
+
+--
+-- TOC entry 199 (class 1259 OID 16434)
+-- Name: product; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.product
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.product OWNER TO postgres;
+
+--
+-- TOC entry 198 (class 1259 OID 16426)
+-- Name: Products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Products" (
+    pid bigint DEFAULT nextval('public.product'::regclass) NOT NULL,
+    productname character varying(50) NOT NULL,
+    rate numeric(10,3) NOT NULL,
+    description text NOT NULL,
+    discount numeric(10,3) DEFAULT 0 NOT NULL,
+    rating numeric(5,2) NOT NULL,
+    cid bigint NOT NULL,
+    bid bigint NOT NULL,
+    images text[]
+);
+
+
+ALTER TABLE public."Products" OWNER TO postgres;
+
+--
+-- TOC entry 197 (class 1259 OID 16420)
+-- Name: increment; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.increment
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.increment OWNER TO postgres;
+
+--
+-- TOC entry 196 (class 1259 OID 16403)
+-- Name: User; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."User" (
+    name character varying(30) NOT NULL,
+    email character varying(50) NOT NULL,
+    address character varying(100) NOT NULL,
+    phone bigint NOT NULL,
+    password character varying(100) NOT NULL,
+    id bigint DEFAULT nextval('public.increment'::regclass) NOT NULL
+);
+
+
+ALTER TABLE public."User" OWNER TO postgres;
+
+--
+-- TOC entry 2847 (class 0 OID 16462)
+-- Dependencies: 201
+-- Data for Name: Brands; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Brands" (brand, bid, categories) FROM stdin;
+POCO	1	{1}
+Samsung	2	{1}
+Redmi	3	{1}
+Realmi	4	{1}
+OPPO	5	{1}
+IPhone	6	{1}
+ClothoMania	7	{2,3,4}
+DressWorld	8	{2,3,4}
+\.
+
+
+--
+-- TOC entry 2851 (class 0 OID 16487)
+-- Dependencies: 205
+-- Data for Name: Buy; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Buy" (buyid, uid, pid, buying_date, shiping_date, deleivery_date, total_amount, quantity) FROM stdin;
+4	6	2	2020-08-18	\N	\N	34998.000	2
+5	6	8	2020-08-18	\N	\N	568.000	2
+6	6	4	2020-08-19	\N	\N	9999.000	1
+7	6	7	2020-08-19	\N	\N	270.000	1
+8	6	5	2020-08-19	\N	\N	59931.000	3
+9	6	6	2020-08-19	\N	\N	898.000	2
+10	6	4	2020-08-19	\N	\N	39996.000	4
+11	6	8	2020-08-19	\N	\N	284.000	1
+\.
+
+
+--
+-- TOC entry 2852 (class 0 OID 16511)
+-- Dependencies: 206
+-- Data for Name: Cart; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Cart" (cart_id, uid, pid) FROM stdin;
+7	6	9
+\.
+
+
+--
+-- TOC entry 2846 (class 0 OID 16455)
+-- Dependencies: 200
+-- Data for Name: Category; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Category" (category, cid) FROM stdin;
+SmartPhones	1
+Kids	2
+Men	3
+Women	4
+Appliances	5
+Laptops	6
+Sports	7
+\.
+
+
+--
+-- TOC entry 2844 (class 0 OID 16426)
+-- Dependencies: 198
+-- Data for Name: Products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Products" (pid, productname, rate, description, discount, rating, cid, bid, images) FROM stdin;
+2	POCO X2	17499.000	Get set to game, capture, and watch your favourite content on the POCO X2 smartphone. Featuring the RealityFlow display, a quad rear camera system (64 MP Sony IMX686 sensor, 8 MP ultra-wide sensor, 2 MP depth sensor, and 2 MP macro sensor), and the liquid cooling system, this smartphone has everything in place to help you do anything in the most suitable manner. Get ready to stun everyone with your picture-perfect selfies, thanks to this smartphone dual in-screen cameras. That’s not all, with the presence of the 4500 mAh battery, you can be sure that this smartphone will be with you throughout.	0.000	4.50	1	1	{poco-x2.jpeg,poco-x2-2.jpg,poco-x2-3.jpg,poco-x2-4.jpg}
+7	Polka Print Daily Wear Georgette Saree	270.000	Envelop yourself with eternal adulation with this yellow-black colored printed casual wear saree. This saree is crafted on faux georgette fabric, which is further enriched with beautiful polka prints that makes you look awesome. The Half & Half outfit comes along with matching unstitched faux georgette blouse piece, which can be stitched as per your choice & requirement. Perfect for casual parties, social outings, weekend get together, kitty parties, office. Buy this saree now before it gone out of stock. Team it with stylised accessories to make your looks more beautiful.	0.000	3.90	4	8	{womenwear2.jpeg}
+4	Redmi 8	9999.000	If you are a travel blogger, gamer, entertainment seeker, or a person who loves a high-end personal device, then the Redmi 8 has been created to meet your needs. This smartphone features a 15.8-cm (6.22) Dot Notch Display, a 12 MP + 2 MP AI Dual Camera, and a 5000 mAh High-capacity Battery to offer detailed views of the stunning photos that you can click all day long without running out of battery life.	0.000	4.20	1	3	{mi-redmi-8.jpeg,mi-redmi-8-2.jpeg,mi-redmi-8-3.jpeg,mi-redmi-8-4.jpeg}
+5	Samsung Galaxy M31	19977.000	64MP + 8MP + 5MP + 5MP rear camera | 32MP front facing camera 16.21 centimeters (6.4-inch) FHD+ capacitive touchscreen with 2340 x 1080 pixels resolution, 404 ppi pixel density and 16M color support Memory, Storage & SIM: 6GB RAM | 64GB storage expandable up to 512GB | Dual SIM with dual standby (4G+4G) Android v10.0 operating system with 2.3GHz + 1.7GHz Exynos 9611 Octa core processor 6000mAH lithium-ion battery 1 year manufacturer warranty for device and 6 months manufacturer warranty for in-box accessories including batteries from the date of purchase Box also includes: Travel Adapter, USB Cable, Ejection Pin, User Manual Fast face unlock and fingerprint sensor | Dual SIM (nano+nano) with dual standby and dual VoLTE , Dedicated Sim slot;Widevine L1 certification for HD streaming	0.000	4.50	1	2	{samsung-galaxy-m31.jpeg,samsung-galaxy-m31-2.jpeg,samsung-galaxy-m31-3.jpeg,samsung-galaxy-m31-4.jpeg}
+6	Embellished Bollywood Velvet Saree	449.000	Style Code:Blue Velvet Sari ooo,Pattern:Embroidered, Embellished Pack of :1 ,Secondary Color White ,Occasion\n,Party & Festive\n,Hand Embroidery:NO\nDecorative Material\nLace, Mukesh\nFabric Care\nDo not Wring	0.000	3.20	4	7	{womenwear1.jpeg}
+8	Men Hooded Neck Red T-Shirt	284.000	Hooded Neck,Western Wear,Cold water wash only	0.000	4.00	3	7	{menwear1.jpeg}
+9	Men Hooded Neck Red, Black T-Shirt	299.000	HM-1001-Black Red,Cotton Blend,Pack of 1	0.000	4.20	3	8	{menwear2.jpeg}
+\.
+
+
+--
+-- TOC entry 2842 (class 0 OID 16403)
+-- Dependencies: 196
+-- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."User" (name, email, address, phone, password, id) FROM stdin;
+Kalaiyarasan S	kalaisivagi@gmail.com	A.Ayyamperumalpatti, Tamil Nadu, India	6379014934	123456789	6
+\.
+
+
+--
+-- TOC entry 2862 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: brand; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.brand', 8, true);
+
+
+--
+-- TOC entry 2863 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: buy; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.buy', 11, true);
+
+
+--
+-- TOC entry 2864 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: cart; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.cart', 8, true);
+
+
+--
+-- TOC entry 2865 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: category; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.category', 7, true);
+
+
+--
+-- TOC entry 2866 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: increment; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.increment', 6, true);
+
+
+--
+-- TOC entry 2867 (class 0 OID 0)
+-- Dependencies: 199
+-- Name: product; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.product', 9, true);
+
+
+--
+-- TOC entry 2716 (class 2606 OID 16474)
+-- Name: Brands Brands_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Brands"
+    ADD CONSTRAINT "Brands_pkey" PRIMARY KEY (bid);
+
+
+--
+-- TOC entry 2718 (class 2606 OID 16492)
+-- Name: Buy Buy_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Buy"
+    ADD CONSTRAINT "Buy_pkey" PRIMARY KEY (buyid);
+
+
+--
+-- TOC entry 2720 (class 2606 OID 16515)
+-- Name: Cart Cart_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Cart"
+    ADD CONSTRAINT "Cart_pkey" PRIMARY KEY (cart_id);
+
+
+--
+-- TOC entry 2714 (class 2606 OID 16482)
+-- Name: Category Category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Category"
+    ADD CONSTRAINT "Category_pkey" PRIMARY KEY (cid);
+
+
+--
+-- TOC entry 2712 (class 2606 OID 16433)
+-- Name: Products Products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Products"
+    ADD CONSTRAINT "Products_pkey" PRIMARY KEY (pid);
+
+
+--
+-- TOC entry 2710 (class 2606 OID 16484)
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."User"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY (id);
+
+
+-- Completed on 2020-08-19 15:31:40
+
+--
+-- PostgreSQL database dump complete
+--
+

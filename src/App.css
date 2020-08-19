@@ -10,3 +10,8 @@ li{
   border: none;
   box-shadow: .5rem .5rem 1rem black;
 }
+
+#navbarSupportedContent > ul > li.nav-item.dropdown.text-white.show > div > a:hover,#navbarSupportedContent > div > ul > li.nav-item.dropdown.text-white.show > div > a:hover{
+  background-color: #343a40;
+  color: white;
+}
