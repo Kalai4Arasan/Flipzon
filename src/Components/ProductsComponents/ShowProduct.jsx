@@ -89,7 +89,7 @@ class ShowProduct extends Component {
         }
         else{
             for (let item of this.state.productData){
-                if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate>=Number(this.state.finalMinRate) && item.rate<=Number(this.state.finalMaxRate)){
+                if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate-item.discount>=Number(this.state.finalMinRate) && item.rate-item.discount<=Number(this.state.finalMaxRate)){
                     data.push(item)
                 }
             }
@@ -101,7 +101,7 @@ class ShowProduct extends Component {
             const data=[]
             if(this.state.finalMinRate>0 && this.state.finalMaxRate>0){
                 for (let item of this.state.productData){
-                    if(item.rate>=Number(this.state.finalMinRate) && item.rate<=Number(this.state.finalMaxRate)){
+                    if(item.rate-item.discount>=Number(this.state.finalMinRate) && item.rate-item.discount<=Number(this.state.finalMaxRate)){
                         data.push(item)
                     }
                 }
@@ -128,14 +128,14 @@ class ShowProduct extends Component {
             const data=[]
             if(this.state.filterBrand.length==0){
                 for (let item of this.state.productData){
-                    if(item.rate>=Number(this.state.min) && item.rate<=Number(this.state.max)){
+                    if(item.rate-item.discount>=Number(this.state.min) && item.rate-item.discount<=Number(this.state.max)){
                         data.push(item)
                     }
                 }
             }
             else{
                 for (let item of this.state.productData){
-                    if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate>=Number(this.state.min) && item.rate<=Number(this.state.max)){
+                    if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate-item.discount>=Number(this.state.min) && item.rate-item.discount<=Number(this.state.max)){
                         data.push(item)
                     }
                 }
@@ -184,7 +184,7 @@ class ShowProduct extends Component {
             }
             else{
                 for (let item of this.state.productData){
-                    if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate>=Number(this.state.finalMinRate) && item.rate<=Number(this.state.finalMaxRate)){
+                    if(this.state.filterBrand.indexOf(item.brand)>=0 && item.rate-item.discount>=Number(this.state.finalMinRate) && item.rate-item.discount<=Number(this.state.finalMaxRate)){
                         data.push(item)
                     }
                 }
@@ -196,7 +196,7 @@ class ShowProduct extends Component {
                 const data=[]
                 if(this.state.finalMinRate>0 && this.state.finalMaxRate>0){
                     for (let item of this.state.productData){
-                        if(item.rate>=Number(this.state.finalMinRate) && item.rate<=Number(this.state.finalMaxRate)){
+                        if(item.rate-item.discount>=Number(this.state.finalMinRate) && item.rate-item.discount<=Number(this.state.finalMaxRate)){
                             data.push(item)
                         }
                     }
@@ -253,7 +253,10 @@ class ShowProduct extends Component {
                     <div class="col-md-8">
                     <p style={{margin:'2rem'}}>
                         <h3>{item.productname}</h3>
-                    <small class="badge badge-success badge-pill ">{item.rating} <i class="fa fa-star"></i></small><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{item.rate}</span>
+                    <small class="badge badge-success badge-pill ">{item.rating} <i class="fa fa-star"></i></small>
+                    {item.discount==0?<span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{parseFloat(item.rate).toFixed(2)}</span>:
+                        <div><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{(item.rate-item.discount).toFixed(2)}</span><span><small style={{color:'grey',textDecoration:'line-through',marginLeft:'.5rem'}}>&#8377;{parseFloat(item.rate).toFixed(2)}</small><strong class="badge badge-success ml-3">{(((item.discount)/item.rate)*100).toFixed(2)}% off</strong></span></div>  
+                    }
                     <p style={{marginTop:'1rem',maxHeight:'100px',width:'300px',overflow:'hidden',textOverflow:'ellipsis'}}>
                         {item.description}
                     </p><span style={{display:'flex',marginTop:'-25px'}}>...</span>
@@ -273,7 +276,10 @@ class ShowProduct extends Component {
                     <div class="col-md-8">
                     <p style={{margin:'2rem'}}>
                         <h3>{item.productname}</h3>
-                    <small class="badge badge-success badge-pill ">{item.rating} <i class="fa fa-star"></i></small><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{item.rate}</span>
+                    <small class="badge badge-success badge-pill ">{item.rating} <i class="fa fa-star"></i></small>
+                    {item.discount==0?<span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{parseFloat(item.rate).toFixed(2)}</span>:
+                        <div><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{(item.rate-item.discount).toFixed(2)}</span><span><small style={{color:'grey',textDecoration:'line-through',marginLeft:'.5rem'}}>&#8377;{parseFloat(item.rate).toFixed(2)}</small><strong class="badge badge-success ml-3">{(((item.discount)/item.rate)*100).toFixed(2)}% off</strong></span></div>  
+                    }
                     <p style={{marginTop:'1rem',maxHeight:'100px',width:'300px',overflow:'hidden',textOverflow:'ellipsis'}}>
                         {item.description}
                     </p><span style={{display:'flex',marginTop:'-25px'}}>...</span>

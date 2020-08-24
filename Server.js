@@ -67,7 +67,7 @@ app.post('/login',(req,res)=>{
 
 app.get('/getProducts',(req,res)=>{
   category=req.query.category
-  client.query(`SELECT p.pid,p.productname,p.rate,p.description,p.rating,c.category,b.brand,p.images FROM "Products" AS p,"Category" AS c,"Brands" AS b WHERE p.cid=c.cid AND p.bid=b.bid AND p.cid=(SELECT cid FROM "Category" WHERE category=$1)`,[category],(err,result)=>{
+  client.query(`SELECT p.pid,p.productname,p.discount,p.rate,p.description,p.rating,c.category,b.brand,p.images FROM "Products" AS p,"Category" AS c,"Brands" AS b WHERE p.cid=c.cid AND p.bid=b.bid AND p.cid=(SELECT cid FROM "Category" WHERE category=$1)`,[category],(err,result)=>{
         if(result.rowCount==0){
           return res.send([])
         }
@@ -131,7 +131,7 @@ app.post('/cart',(req,res)=>{
 
 app.post('/orderedProducts',(req,res)=>{
   uid=req.body.User.uid
-  client.query(`SELECT a.*,b.*,c.*,d.*,e.* FROM "Buy" AS a,"Products" AS b,"User" AS c,"Category" AS d,"Brands" AS e where a.pid=b.pid AND a.uid=c.id AND a.uid=$1 AND d.cid=b.cid AND e.bid=b.bid`,[6],(err,result)=>{
+  client.query(`SELECT a.*,b.*,c.*,d.*,e.* FROM "Buy" AS a,"Products" AS b,"User" AS c,"Category" AS d,"Brands" AS e where a.pid=b.pid AND a.uid=c.id AND a.uid=$1 AND d.cid=b.cid AND e.bid=b.bid`,[uid],(err,result)=>{
     if(err){
       console.log(err)
     }
@@ -156,6 +156,63 @@ app.post('/deleteCart',(req,res)=>{
   })
 
 })
+
+app.post("/getCartCount",(req,res)=>{
+    uid=req.body.User.uid
+    client.query(`SELECT * FROM "Cart" WHERE uid=$1`,[uid],(err,result)=>{
+      res.send([result.rowCount])
+    })
+})
+
+app.post("/cancelProduct",(req,res)=>{
+  buyid=req.body.Product.buyid
+  uid=req.body.Product.uid
+  pid=req.body.Product.pid
+  quantity=req.body.Product.quantity
+  total_amount=req.body.Product.total_amount
+  buying_date=req.body.Product.buying_date
+  shiping_date=req.body.Product.shiping_date
+  delivery_date=req.body.Product.delivery_date
+  client.query(`DELETE FROM "Buy" where buyid=$1`,[buyid],(err,result)=>{
+    if(err==null){
+        client.query(`INSERT INTO "Canceled"(uid,pid,quantity,total_amount,buying_date,shiping_date,delivery_date) VALUES($1,$2,$3,$4,$5,$6,$7)`,[uid,pid,quantity,total_amount,buying_date,shiping_date,delivery_date],(err,result)=>{
+          if(err==null){
+            return res.send(["Success"])
+          }
+          else{
+            console.log(err)
+            return res.send([])
+          }
+        })
+    }
+    else{
+      return res.send([])
+    }
+  })
+})
+
+app.post('/canceledProducts',(req,res)=>{
+  uid=req.body.User.uid
+  client.query(`SELECT a.*,b.*,c.*,d.*,e.* FROM "Canceled" AS a,"Products" AS b,"User" AS c,"Category" AS d,"Brands" AS e where a.pid=b.pid AND a.uid=c.id AND a.uid=$1 AND d.cid=b.cid AND e.bid=b.bid`,[uid],(err,result)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      res.send(result.rows)
+    }
+  })
+})
+
+
+app.get('/getOfferedProducts',(req,res)=>{
+  client.query(`SELECT p.pid,p.productname,p.discount,p.rate,p.description,p.rating,c.category,b.brand,p.images FROM "Products" AS p,"Category" AS c,"Brands" AS b WHERE p.cid=c.cid AND p.bid=b.bid AND p.discount>0`,(err,result)=>{
+        if(result.rowCount==0){
+          return res.send([])
+        }
+        res.send(result.rows)
+  })
+})
+
 
 app.listen(process.env.PORT|4200,(err)=>{
     console.log("Connected to the server...",process.env.PORT|4200)

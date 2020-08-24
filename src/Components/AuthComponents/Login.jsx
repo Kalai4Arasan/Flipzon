@@ -73,7 +73,7 @@ class Login extends Component {
                 {this.state.errors.username!=null && this.state.errors.username.length>0? <span><small class="text-danger">{this.state.errors.username}</small><br/></span>:null}
                 <input class="input" type="password" onChange={this.handleChange} id="password" name="password" placeholder="Password"/><br/>
                 {this.state.errors.password!=null && this.state.errors.password.length>0? <span><small class="text-danger">{this.state.errors.password}</small><br/></span>:null}
-                {this.state.finalError!=null && this.state.finalError.length>0? <span><small class="text-danger">{this.state.finalError}</small></span>:null}
+                {this.state.finalError!=null && this.state.finalError.length>0? <span><small class="text-danger">{this.state.finalError}</small><br/></span>:null}
                 <input type="submit" class="btn btn-primary" value="LogIn"/>
                 </form>
                 <div id="formFooter">

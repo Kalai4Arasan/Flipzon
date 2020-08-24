@@ -3,12 +3,12 @@ import { useLocation, useHistory } from 'react-router-dom'
 import JwtDecode from 'jwt-decode'
 import Axios from 'axios'
 
-const BuyProduct=function(){
+const BuyProduct=function({content}){
         const location=useLocation()
         const history=useHistory()
         const {product}=location.state
         const User=JwtDecode(sessionStorage.getItem("User"))
-        const [rate,setRate]=useState(product.rate)
+        const [rate,setRate]=useState(product.rate-product.discount)
         const [address,setAddress]=useState(User.address)
         const [quantity,setQuantity]=useState(1)
         const [qerror,setQerror]=useState(null)
@@ -21,6 +21,7 @@ const BuyProduct=function(){
             const Data={"cid":product.cart_id,"uid":product.id}
             Axios.post("http://localhost:4200/deleteCart",{Data}).then(res=>{
                 console.log("Deleted from cart")
+                content()
             })
         }
 
@@ -29,7 +30,7 @@ const BuyProduct=function(){
         function handleQuantity(e){
             if(e.target.value<=20){
             setQuantity(e.target.value)
-            setRate(product.rate*e.target.value)
+            setRate((product.rate-product.discount)*e.target.value)
             setQerror(null)
             }
             else{
@@ -68,7 +69,7 @@ const BuyProduct=function(){
             history.push('/successPayment',[data,product])       
         }
         return (
-            <div class="mt-4 row">
+            <div class="mt-4 row animate__animated animate__fadeIn">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 m-4">
                     <h3>Delivery Details:</h3>
@@ -79,7 +80,7 @@ const BuyProduct=function(){
                         <label for="pdname" class="mt-4 font-weight-bolder">Product Name</label>
                         <input id="pdname" class="form-control" value={product.productname} readOnly/>
                         <label for="rate" class="mt-4 font-weight-bolder"> Amount <span><small>(for one product)</small></span> :</label>
-                        <input id="rate" class="form-control" value={product.rate} readOnly/>
+                        <input id="rate" class="form-control" value={product.discount==0?product.rate:product.rate-product.discount} readOnly/>
                         <label for="address"  class="mt-4 font-weight-bolder" >Address</label>
                         <textarea id="address" onChange={handleAddress.bind(this)} class="form-control" name="address" value={address} />
                         {address.length==0?<h6 class="text-danger text-center mt-1" style={{fontSize:'14px'}}>Addess field must be required...<br/></h6>:null}

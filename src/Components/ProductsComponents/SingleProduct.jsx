@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './ProductComponent.css'
 import Axios from "axios";
 import JwtDecode from "jwt-decode";
-const SingleProduct=()=>{
+const SingleProduct=({content})=>{
     const history=useHistory()
     const {state}=useLocation()
     const [showImage,setImage]=useState(state.images[0])
@@ -37,6 +37,7 @@ const SingleProduct=()=>{
                 else{
                     if(res.data.length>0){
                         setSuccess("Succesfully added in your cart")
+                        content()
                     }
                     else{
                         setError("Something is wrong...")
@@ -50,7 +51,7 @@ const SingleProduct=()=>{
         }
     }
     return (
-        <div style={{marginTop:'3rem'}}>
+        <div style={{marginTop:'3rem'}} class="animate__animated animate__fadeIn">
             <div class="row" style={{marginLeft:'1rem',display:'flex',marginLeft:'-30px'}}>
             <div class="col-md-1 ">
             {state.images.map(item=>{
@@ -61,12 +62,15 @@ const SingleProduct=()=>{
             })}
             </div>
             <div class="col-md-3">
-            {showImage?<div style={{height:'300px',width:'150px'}} ><img class="card-img-top" src={require('../../asserts/productImages/'+showImage)} alt="Card image cap"/></div>:""}
+            {showImage?<div  ><img class="card-img-top" style={{maxHeight:'400px',maxWidth:'250px'}} src={require('../../asserts/productImages/'+showImage)} alt="Card image cap"/></div>:""}
             </div>
             <div class="col-md-7">
             <p style={{margin:'2rem'}}>
                 <h3>{state.productname}</h3>
-            <small class="badge badge-success badge-pill ">{state.rating} <i class="fa fa-star"></i></small><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{state.rate}</span>
+            <small class="badge badge-success badge-pill ">{state.rating} <i class="fa fa-star"></i></small>
+            {state.discount==0?<span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{parseFloat(state.rate).toFixed(2)}</span>:
+                        <div><span style={{marginLeft:'1rem',fontSize:'20px',fontWeight:'700'}}>&#8377;{(state.rate-state.discount).toFixed(2)}</span><span><small style={{color:'grey',textDecoration:'line-through',marginLeft:'.5rem'}}>&#8377;{parseFloat(state.rate).toFixed(2)}</small><strong class="badge badge-success ml-3">{(((state.discount)/state.rate)*100).toFixed(2)}% off</strong></span></div>  
+                    }
             <strong><br/><br/>Description :</strong>
             <p style={{marginTop:'1rem',fontSize:'13px'}}>
                 {state.description}

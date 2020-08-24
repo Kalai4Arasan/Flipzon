@@ -15,7 +15,7 @@ const SuccessPayment=function(){
     const bdata=data[0]
     if(data.length>0){
         return (
-            <div style={{marginTop:'1rem'}}>
+            <div style={{marginTop:'1rem'}} class="animate__animated animate__fadeIn">
                 <h3 class="alert alert-success ">Your order is placed successfully...</h3>
                 <div class="card">
                    <div class="card-body text-center" style={{marginTop:'1rem'}}>

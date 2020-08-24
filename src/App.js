@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Logo from './asserts/logo/HomeLogo.png'
+import CartImage from './asserts/logo/cart.png'
 import Fire from './asserts/logo/fire.png'
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import OfferZone from './Components/ProductsComponents/OfferZone';
@@ -12,11 +13,13 @@ import BuyProduct from './Components/ProductsComponents/BuyProduct';
 import SuccessPayment from './Components/ProductsComponents/SuccessPayment';
 import Cart from './Components/ProductsComponents/Cart';
 import OrderedProducts from './Components/ProductsComponents/OrderedProducts';
+import Axios from 'axios';
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             userData:sessionStorage.getItem('User')!=null? JwtDecode(sessionStorage.getItem('User')):null,
+            cartCount:0,
          }
     }
     setAuth=()=>{
@@ -45,6 +48,18 @@ class App extends Component {
                 </div>
                 </> 
             )
+        }
+    }
+    componentWillMount(){
+        this.setCartCount()
+    }
+
+    setCartCount=()=>{
+        if(sessionStorage.getItem('User')){
+            const User={'uid':this.state.userData.id}
+            Axios.post('http://localhost:4200/getCartCount',{User}).then((res)=>{
+                this.setState({cartCount:res.data})
+            })
         }
     }
     render() { 
@@ -92,8 +107,10 @@ class App extends Component {
                     <ul class="navbar-nav links">
                     {sessionStorage.getItem('User')?<>
                         <li class="nav-item dropdown text-white">
-                            <Link class="nav-link text-white" to="/cart">
-                                <i class="fa fa-shopping-cart"></i>
+                            <Link class="nav-link text-white" style={{display:'flex',marginTop:'-10px'}} to="/cart">
+                                {/* <i class="fa fa-shopping-cart" style={{fontSize:'35px'}}></i> */}
+                                <img src={CartImage} height="40" width="40"/>
+                                <strong style={{marginLeft:'-26px',marginTop:'-18px',color:'orange'}}>{this.state.cartCount>0?<span class="badge badge-pill badge-light">{this.state.cartCount}</span>:<span>&#128577;</span>}</strong>
                             </Link>
                         </li>
                         <li class="nav-item dropdown text-white">
@@ -137,16 +154,16 @@ class App extends Component {
                         <OfferZone/>
                     </Route>
                     <Route exact path="/singleproduct">
-                        <SingleProduct/>
+                        <SingleProduct content={this.setCartCount}/>
                     </Route>
                     <Route exact path="/buyproduct">
-                        <BuyProduct/>
+                        <BuyProduct content={this.setCartCount}/>
                     </Route>
                     <Route exact path="/successPayment">
                         <SuccessPayment/>
                     </Route>
                     <Route exact path="/cart">
-                        <Cart/>
+                        <Cart content={this.setCartCount}/>
                     </Route>
                     <Route exact path="/orders">
                         <OrderedProducts/>

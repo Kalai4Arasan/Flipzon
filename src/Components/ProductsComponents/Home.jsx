@@ -9,7 +9,7 @@ class Home extends Component {
     }
     render() { 
         return ( 
-                <div id="carousel" class="carousel slide" data-ride="carousel" style={{marginTop:'1rem'}}>
+                <div id="carousel" class="carousel slide animate__animated animate__fadeIn" data-ride="carousel" style={{marginTop:'1rem'}}>
                 <div class="carousel-inner">
                     <div style={{height:'200px',overflow:'hidden'}} class="carousel-item active">
                     <img class="d-block" height="400px" width="1200" src={c2} alt="First slide"/>
