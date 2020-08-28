@@ -1,8 +1,9 @@
 import { useLocation, Redirect, useHistory } from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProductComponent.css'
 import Axios from "axios";
 import JwtDecode from "jwt-decode";
+import user from "../../asserts/logo/user.png"
 const SingleProduct=({content})=>{
     const history=useHistory()
     const {state}=useLocation()
@@ -10,6 +11,8 @@ const SingleProduct=({content})=>{
     const [isLoading,setLoading]=useState(false)
     const [error,setError]=useState(null)
     const [success,setSuccess]=useState(null)
+    const [reviews,setReviews]=useState(null)
+
     function handleBuy(){
         if(sessionStorage.getItem("User")){
             return history.push(
@@ -23,6 +26,16 @@ const SingleProduct=({content})=>{
             return history.push('/login')
         }
     }
+    useEffect(
+        ()=>{
+            const Data={"pid":state.pid}
+            Axios.post('http://localhost:4200/getReviews',{Data}).then((res)=>{
+                if(res.data.length>0){
+                    setReviews(res.data)
+                }
+            })
+        },[state]
+    )
     function handleCart(){
         setLoading(true)
         setError(null)
@@ -56,7 +69,7 @@ const SingleProduct=({content})=>{
             <div class="col-md-1 ">
             {state.images.map(item=>{
                 return(
-                <div style={{height:"100px",width:"40px"}}>
+                <div style={{maxHeight:"100px",width:"40px",marginTop:'.5rem'}}>
                 <img class="card-img-top img-thumbnail thumbHover" style={{cursor:'pointer'}} onMouseOver={()=>setImage(item)}  src={require('../../asserts/productImages/'+item)} alt="Card image cap"/>
                 </div>)
             })}
@@ -83,6 +96,28 @@ const SingleProduct=({content})=>{
         <button onClick={()=>handleCart()} class={isLoading==false?"btn btn-warning w-25":"btn btn-warning w-25 disabled"}>{isLoading==false?<>Add to <i class="fa fa-shopping-cart"></i></>:<i class="fa fa-spin fa-spinner"></i>}</button><button onClick={()=>handleBuy()} class="btn btn-primary ml-3 w-25">Buy</button>
             </div>
             <h4 class="mt-4" style={{marginLeft:'2rem'}}>Reviews :</h4>
+            <div class="mt-4" style={{marginLeft:'2rem',marginBottom:'2rem'}}>
+                {reviews!=null && reviews.length>0?reviews.map((item)=>{
+                    return (
+                        <div class="card" >
+                                <div class="row m-3">
+                                    <div class="col-md-1">
+                                        <img src={user} height="40" width="40" alt="user"/>
+                                    </div> 
+                                    <div class="col-md-8">
+                                        <h6>{sessionStorage.getItem('User')? JwtDecode(sessionStorage.getItem('User')).name==item.name? item.name+' (You)': item.name:item.name} <span><small>made a review</small></span></h6> 
+                                        <small>on <strong>{item.uploaded_date.substring(0,10)}</strong></small>
+                                        <h5 style={{float:'right'}}><i class="fa fa-star" style={{color:'yellow'}}></i> {item.rating}</h5>
+                                        <hr/>
+                                        <p>
+                                            {item.review}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                    )
+                }):<p>No Reviews</p>}
+            </div>
             </div>
         </div>
         </div>

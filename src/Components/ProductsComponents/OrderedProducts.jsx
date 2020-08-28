@@ -61,7 +61,7 @@ class OrderedProducts extends Component {
                         <Shipped data={this.state.orderedData!=null?this.state.orderedData:[]} get={this.getProduct}/>
                     </Route>
                     <Route exact path="/canceled">
-                        <Canceled/>
+                        <Canceled data={this.state.orderedData!=null?this.state.orderedData:[]} get={this.getProduct}/>
                     </Route>
                 </Switch>
 

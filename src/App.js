@@ -14,6 +14,7 @@ import SuccessPayment from './Components/ProductsComponents/SuccessPayment';
 import Cart from './Components/ProductsComponents/Cart';
 import OrderedProducts from './Components/ProductsComponents/OrderedProducts';
 import Axios from 'axios';
+import AddReview from './Components/ProductsComponents/AddReview';
 class App extends Component {
     constructor(props) {
         super(props);
@@ -176,6 +177,9 @@ class App extends Component {
                     </Route>
                     <Route exact path="/canceled">
                         <OrderedProducts/>
+                    </Route>
+                    <Route exact path="/addReview">
+                        <AddReview/>
                     </Route>
                 </Switch>
                 </div>

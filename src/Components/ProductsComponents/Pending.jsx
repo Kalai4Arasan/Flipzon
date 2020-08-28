@@ -10,7 +10,7 @@ class Pending extends Component {
             fail:null,
          }
         for(let item of this.props.data){
-            if(item.shiping_date==null && item.delivery_date==null){
+            if(item.status==1){
                 this.state.pendingData.push(item)
             }
         }
@@ -18,15 +18,7 @@ class Pending extends Component {
     }
     handleCancel=(item)=>{
         const Product={
-            "buyid":item.buyid,
-            "pid":item.pid,
-            "uid":item.uid,
-            "buying_date":item.buying_date.substring(0,10),
-            "shiping_date":item.shiping_date,
-            "delivery_date":item.delivery_date,
-            "total_amount":item.total_amount,
-            "quantity":item.quantity,
-            "canceled_date":new Date().toISOString().substring(0,10)
+            "buyid":item.buyid
         }
         Axios.post("http://localhost:4200/cancelProduct",{Product}).then((res)=>{
             if(res.data.length>0){

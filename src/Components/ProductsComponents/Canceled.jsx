@@ -8,27 +8,19 @@ class Canceled extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            canceledData:null,
-            isLoading:true,
-            userData:JwtDecode(sessionStorage.getItem('User'))
+            canceledData:[],
          }
-    }
-    componentWillMount(){
-        const User={"uid":this.state.userData.id}
-        Axios.post("http://localhost:4200/canceledProducts",{User}).then((res)=>{
-            if(res.data.length>0){
-                this.setState({canceledData:res.data})
+         for(let item of this.props.data){
+            if(item.status==2){
+                this.state.canceledData.push(item)
             }
-            this.setState({isLoading:false})
-        })
+        }
+        this.setState({canceledData:this.state.canceledData})
     }
     render() { 
         if(!sessionStorage.getItem("User")){
             return <Redirect to="/login"/>
         }
-        if(this.state.isLoading===true){
-            return <Loading/>
-        } 
         if(this.state.canceledData==null || this.state.canceledData.length==0){
             return (
                 <img style={{marginTop:'2rem',display:'block',width:'40%',marginLeft:'auto',marginRight:'auto'}} src={StockNotFound}/>
